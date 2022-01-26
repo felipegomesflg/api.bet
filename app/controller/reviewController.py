@@ -27,6 +27,8 @@ def create_review(review: schemas.ReviewCreate, db: Session = Depends(get_db), u
     new_data = models.Review(
         **review.dict()
     )
+    new_data.userId = user_data.id
+    new_data.cod = new_data.cod.upper()
     db.add(new_data)
     db.commit()
     db.refresh(new_data)

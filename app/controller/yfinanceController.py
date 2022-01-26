@@ -1,6 +1,7 @@
+from msilib.schema import Error
 from turtle import title
 from fastapi import FastAPI, Response, status, HTTPException, Depends, APIRouter
-from datetime import date,timedelta
+from datetime import date,timedelta,datetime
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -15,7 +16,7 @@ warnings.filterwarnings('ignore')
 yf.pdr_override()
 today = date.today()
 last_day_of_prev_month = date.today().replace(day=1) - timedelta(days=1)
-start_day_of_prev_month = date.today().replace(day=1) - timedelta(days=last_day_of_prev_month.day)
+start_day_of_prev_month = date.today() - timedelta(days=last_day_of_prev_month.day)
 
 
 
@@ -29,7 +30,24 @@ router = APIRouter(
 )
  
 #####################GET TICKER LAST MONTH
-@router.get("/{ticker}")
-def get_bets(ticker:str, user_data: int = Depends(oauth2.get_current_user)):
-    df_ibov = web.get_data_yahoo(ticker.upper()+".SA", start=start_day_of_prev_month, end=today.strftime("%b-%d-%Y"))
+@router.get("/getticker/{ticker}")
+def get_bet(ticker:str):
+    print(today.strftime("%Y-%m-%d"))
+    print(start_day_of_prev_month)
+    tickers = ["^BVSP", "USDBRL=x"]
+    df_ibov = web.get_data_yahoo(tickers, start=start_day_of_prev_month, end=today.strftime("%Y-%m-%d"))['Close']
     return df_ibov
+
+#####################GET MULTIPLE TICKER LAST MONTH
+@router.get("/gettickers/{ticker}")
+def get_bets(ticker:str):
+    tickers = []
+    for data in ticker.split(','):
+        tickers.append(data.upper()+".SA")
+    try:
+        df_ibov = web.DataReader(tickers, data_source='yahoo', start=start_day_of_prev_month, end=today.strftime("%Y-%m-%d"))['Close']
+        return df_ibov
+    except Exception as error:
+        raise error
+    
+    

@@ -7,7 +7,7 @@ from typing import Optional, List
 from pydantic.types import conint
 
 class Login(BaseModel):
-    email : EmailStr
+    username : EmailStr
     password : str
 
 class Token(BaseModel):
