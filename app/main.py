@@ -3,12 +3,12 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from . import models
 from .database import engine
-from .controller import userController, betController, reviewController, yfinanceController, loginController
+from .controller import authController, userController, betController, reviewController, yfinanceController, betOTWController
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-
+ 
 origins = ['*']
 
 app.add_middleware(
@@ -22,9 +22,10 @@ app.add_middleware(
 
 app.include_router(userController.router)
 app.include_router(betController.router)
+app.include_router(betOTWController.router)
 app.include_router(reviewController.router)
 app.include_router(yfinanceController.router)
-app.include_router(loginController.router)
+app.include_router(authController.router)
 
 @app.get("/")
 def root():

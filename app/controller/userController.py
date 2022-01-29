@@ -25,7 +25,7 @@ def get_user(id:int, db: Session = Depends(get_db), user_data: int = Depends(oau
     return {"data": data}
 ####################CREATE
 @router.post("/", status_code=status.HTTP_201_CREATED)
-def create_user(user: schemas.UserCreate, db: Session = Depends(get_db), user_data: int = Depends(oauth2.get_current_user)):
+def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     hashed_password = utils.pwd_context.hash(user.password)
     user.password = hashed_password
     new_data = models.User(

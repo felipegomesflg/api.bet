@@ -28,17 +28,22 @@ def get_bet(id:int, db: Session = Depends(get_db), user_data: int = Depends(oaut
 def create_bet(bet: schemas.BetCreate, db: Session = Depends(get_db), user_data: int = Depends(oauth2.get_current_user)):
     new_data = models.Bet(
         title = bet.title,
+        #remover depois essa contagem, se basear apenas nos itens
         initialValue = bet.initialValue,
-        published = bet.published
+        published = bet.published,
+        userId = user_data.id
     )
+    print(new_data)
     db.add(new_data)
     db.commit()
     db.refresh(new_data)
     for item in bet.betItem:
+        print(item['initialUnitValue'])
         new_item = models.BetItem(
         cod = item['cod'],
         quantity = item['quantity'],
-        initialUnitValue = item['initialUnitValue'],
+        #tenho que pegar esse valor dinamicamente, ou alguem vai burlar; Preciso guardar a data inicial
+        initialUnitValue = item['initialUnitValue'], 
         betId = new_data.id
     )
         print(new_item)

@@ -11,9 +11,9 @@ from base64 import b64encode
 
 
 router = APIRouter(tags=['Authentication'])
-
+ 
 ####################CREATE
-@router.post("/login", response_model=schemas.Token)
+@router.post("/auth", response_model=schemas.Token)
 def login(user_credentials: schemas.Login, db: Session = Depends(get_db)):
     print(user_credentials.username)
     data = db.query(models.User).filter(models.User.email == user_credentials.username).first()
@@ -24,5 +24,12 @@ def login(user_credentials: schemas.Login, db: Session = Depends(get_db)):
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f"Credenciais Inválidas")
     except Exception as error:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f"Credenciais Inválidas")
-    access_token = oauth2.create_access_token(token_data = {"user_id":data.id, "email":data.email})
-    return {"access_token": access_token, "token_type":"bearer"}
+    access = oauth2.create_access_token(token_data = {"user_id":data.id, "email":data.email})
+    return {
+        "access_token": access['access_token'],
+        "expiration_time": access['expiration_time'], 
+        "token_type":"bearer",
+        "avatar":data.avatar,
+        "first_name":data.first_name,
+        "last_name":data.last_name
+        }

@@ -12,16 +12,20 @@ class Login(BaseModel):
 
 class Token(BaseModel):
     access_token : str 
+    expiration_time:datetime
     token_type:str
-
+    avatar:str
+    first_name:str
+    last_name:str
+    
 class TokenData(BaseModel):
     id: Optional[str] = None
 
 class UserCreate(BaseModel):
-    firstName : str
-    lastName : str
-    companyName : str
-    companyRole : str
+    first_name : str
+    last_name : str
+    company_name : str
+    company_role : str
     avatar : str
     email : EmailStr
     password : str
@@ -29,44 +33,44 @@ class UserCreate(BaseModel):
 
 class UserUpdate(BaseModel):
     id:int
-    firstName : str
-    lastName : str
-    companyName : str
-    companyRole : str
+    first_name : str
+    last_name : str
+    company_name : str
+    company_role : str
     avatar : str
     email : str
     password : str
     telefone : str
-    updatedAt:datetime = datetime.today()
+    updated_at:datetime = datetime.today()
 
 class UserFav(BaseModel):
     id:int = 0
-    userId:int = 0
+    user_id:int = 0
     cod:str = ''
-    betId:int = 0
-    userFavId: int = 0
+    bet_id:int = 0
+    user_fav_id: int = 0
 
 
 
 class BetItemCreate(BaseModel):
     cod : str
-    betId : int
+    bet_id : int
     quantity: float
-    initialUnitValue: float
+    initial_unit_value: float
 
 class BetCreate(BaseModel):
     title : str
-    initialValue : float
+    initial_value : float
     published : bool
-    betItem: List[object] #melhorar isso
+    bet_item: List[object] #melhorar isso
 
 class BetUpdate(BaseModel):
     id:int
     title : str
-    initialValue : float
+    initial_value : float
     published : bool
-    betItem: List[object] = [] #melhorar isso
-    updatedAt:datetime = datetime.today()
+    bet_item: List[object] = [] #melhorar isso
+    updated_at:datetime = datetime.today()
 
 class ReviewCreate(BaseModel):
     title : str
@@ -78,18 +82,18 @@ class ReviewUpdate(BaseModel):
     title : str
     content : str
     cod : str
-    updatedAt:datetime = datetime.today()
+    updated_at:datetime = datetime.today()
 
 class ReviewLikeBaseModel(BaseModel):
-    userId:int
-    reviewId:int
+    user_id:int
+    review_id:int
 
 class ReviewComentBaseModel(BaseModel):
-    userId:int
+    user_id:int
     message:str
-    reviewId:int
-    updatedAt:datetime = datetime.today()
+    review_id:int
+    updated_at:datetime = datetime.today()
 
 class ReviewComentLikeBaseModel(BaseModel):
-    userId:int
-    reviewComentId:int
+    user_id:int
+    review_coment_id:int

@@ -11,7 +11,14 @@ router = APIRouter(
     tags=['Reviews']
 )
 
+#####################PUBLIC
+@router.get("/get_top_reviews")
+def get_reviews(db: Session = Depends(get_db)):
+    data = db.query(models.Review).all()
+    return {"data": data}
+
 #####################READ
+
 @router.get("/")
 def get_reviews(db: Session = Depends(get_db), user_data: int = Depends(oauth2.get_current_user)):
     data = db.query(models.Review).all()

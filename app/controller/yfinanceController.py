@@ -1,15 +1,11 @@
 from msilib.schema import Error
 from turtle import title
 from fastapi import FastAPI, Response, status, HTTPException, Depends, APIRouter
-from datetime import date,timedelta,datetime
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
+from datetime import date,timedelta
 import pandas_datareader as web
-import seaborn as sns
 import yfinance as yf
 import warnings
-from .. import oauth2
+
 
 warnings.filterwarnings('ignore')
 
@@ -34,8 +30,7 @@ router = APIRouter(
 def get_bet(ticker:str):
     print(today.strftime("%Y-%m-%d"))
     print(start_day_of_prev_month)
-    tickers = ["^BVSP", "USDBRL=x"]
-    df_ibov = web.get_data_yahoo(tickers, start=start_day_of_prev_month, end=today.strftime("%Y-%m-%d"))['Close']
+    df_ibov = web.get_data_yahoo(ticker.upper()+".SA", start=start_day_of_prev_month, end=today.strftime("%Y-%m-%d"))['Close']
     return df_ibov
 
 #####################GET MULTIPLE TICKER LAST MONTH
@@ -50,4 +45,5 @@ def get_bets(ticker:str):
     except Exception as error:
         raise error
     
+
     
