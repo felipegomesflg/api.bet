@@ -43,8 +43,11 @@ def update_user(user: schemas.UserUpdate, db: Session = Depends(get_db), user_da
     old_data = data.first()
     if old_data == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    hashed_password = utils.pwd_context.hash(user.password)
-    user.password = hashed_password
+    if not user.password:
+        user.password = old_data.password
+    else :
+        hashed_password = utils.pwd_context.hash(user.password)
+        user.password = hashed_password
     data.update(user.dict(), synchronize_session=False)
     db.commit()
     return {"data": data.first()}
@@ -70,8 +73,8 @@ def delete_user(id:int, db: Session = Depends(get_db), user_data: int = Depends(
 @router.post("/favbet", status_code=status.HTTP_201_CREATED)
 def create_user_fav_bet(user: schemas.UserFav, db: Session = Depends(get_db), user_data: int = Depends(oauth2.get_current_user)):
     new_data = models.UserFavBet(
-        userId= user.userId,
-        betId= user.betId
+        user_id= user.user_id,
+        bet_id= user.bet_id
     )
     db.add(new_data)
     db.commit()
@@ -80,9 +83,9 @@ def create_user_fav_bet(user: schemas.UserFav, db: Session = Depends(get_db), us
 
 ####################DELETE FAV BET
 
-@router.delete("/favbet/{userId}/{betId}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_user_fav_bet(userId:int,betId:int, db: Session = Depends(get_db), user_data: int = Depends(oauth2.get_current_user)):
-    data = db.query(models.UserFavBet).filter(and_(models.UserFavBet.userId == userId,models.UserFavBet.betId == betId))
+@router.delete("/favbet/{user_id}/{bet_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_user_fav_bet(user_id:int,bet_id:int, db: Session = Depends(get_db), user_data: int = Depends(oauth2.get_current_user)):
+    data = db.query(models.UserFavBet).filter(and_(models.UserFavBet.user_id == user_id,models.UserFavBet.bet_id == bet_id))
     if data.first() == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
     data.delete(synchronize_session=False)
@@ -94,8 +97,8 @@ def delete_user_fav_bet(userId:int,betId:int, db: Session = Depends(get_db), use
 @router.post("/favuser", status_code=status.HTTP_201_CREATED)
 def create_user_fav_user(user: schemas.UserFav, db: Session = Depends(get_db), user_data: int = Depends(oauth2.get_current_user)):
     new_data = models.UserFavUser(
-        userId= user.userId,
-        userFavId= user.userFavId
+        user_id= user.user_id,
+        user_fav_id= user.user_fav_id
     )
     db.add(new_data)
     db.commit()
@@ -104,9 +107,9 @@ def create_user_fav_user(user: schemas.UserFav, db: Session = Depends(get_db), u
 
 ####################DELETE FAV USER
 
-@router.delete("/favuser/{userId}/{userFavId}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_user_fav_user(userId:int,userFavId:int, db: Session = Depends(get_db), user_data: int = Depends(oauth2.get_current_user)):
-    data = db.query(models.UserFavUser).filter(and_(models.UserFavUser.userId == userId,models.UserFavUser.userFavId == userFavId))
+@router.delete("/favuser/{user_id}/{user_fav_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_user_fav_user(user_id:int,user_fav_id:int, db: Session = Depends(get_db), user_data: int = Depends(oauth2.get_current_user)):
+    data = db.query(models.UserFavUser).filter(and_(models.UserFavUser.user_id == user_id,models.UserFavUser.user_fav_id == user_fav_id))
     if data.first() == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
     data.delete(synchronize_session=False)
@@ -118,7 +121,7 @@ def delete_user_fav_user(userId:int,userFavId:int, db: Session = Depends(get_db)
 @router.post("/favcod", status_code=status.HTTP_201_CREATED)
 def create_user_fav_cod(user: schemas.UserFav, db: Session = Depends(get_db), user_data: int = Depends(oauth2.get_current_user)):
     new_data = models.UserFavCod(
-        userId= user.userId,
+        user_id= user.user_id,
         cod= user.cod
     )
     db.add(new_data)
@@ -128,9 +131,9 @@ def create_user_fav_cod(user: schemas.UserFav, db: Session = Depends(get_db), us
 
 ####################DELETE FAV COD
 
-@router.delete("/favcod/{userId}/{cod}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_user_fav_bet(userId:int, cod:str, db: Session = Depends(get_db), user_data: int = Depends(oauth2.get_current_user)):
-    data = db.query(models.UserFavCod).filter(and_(models.UserFavCod.userId == userId, func.lower(models.UserFavCod.cod) == func.lower(cod)))
+@router.delete("/favcod/{user_id}/{cod}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_user_fav_bet(user_id:int, cod:str, db: Session = Depends(get_db), user_data: int = Depends(oauth2.get_current_user)):
+    data = db.query(models.UserFavCod).filter(and_(models.UserFavCod.user_id == user_id, func.lower(models.UserFavCod.cod) == func.lower(cod)))
     if data.first() == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
     data.delete(synchronize_session=False)

@@ -31,5 +31,6 @@ def login(user_credentials: schemas.Login, db: Session = Depends(get_db)):
         "token_type":"bearer",
         "avatar":data.avatar,
         "first_name":data.first_name,
-        "last_name":data.last_name
+        "last_name":data.last_name,
+        "user_id":data.id
         }

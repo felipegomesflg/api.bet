@@ -33,12 +33,10 @@ def create_bet(bet: schemas.BetCreate, db: Session = Depends(get_db), user_data:
         published = bet.published,
         userId = user_data.id
     )
-    print(new_data)
     db.add(new_data)
     db.commit()
     db.refresh(new_data)
     for item in bet.betItem:
-        print(item['initialUnitValue'])
         new_item = models.BetItem(
         cod = item['cod'],
         quantity = item['quantity'],
@@ -46,7 +44,6 @@ def create_bet(bet: schemas.BetCreate, db: Session = Depends(get_db), user_data:
         initialUnitValue = item['initialUnitValue'], 
         betId = new_data.id
     )
-        print(new_item)
         db.add(new_item)
     db.commit()
     db.refresh(new_data)

@@ -17,6 +17,7 @@ class Token(BaseModel):
     avatar:str
     first_name:str
     last_name:str
+    user_id:int
     
 class TokenData(BaseModel):
     id: Optional[str] = None
@@ -29,7 +30,7 @@ class UserCreate(BaseModel):
     avatar : str
     email : EmailStr
     password : str
-    telefone : str
+    phone : str
 
 class UserUpdate(BaseModel):
     id:int
@@ -37,10 +38,10 @@ class UserUpdate(BaseModel):
     last_name : str
     company_name : str
     company_role : str
-    avatar : str
-    email : str
-    password : str
-    telefone : str
+    #email : str
+    password : str = ''
+    phone : str
+    about : str
     updated_at:datetime = datetime.today()
 
 class UserFav(BaseModel):

@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from . import models
 from .database import engine
-from .controller import authController, userController, betController, reviewController, yfinanceController, betOTWController
+from .controller import authController, userController, betController, reviewController, yfinanceController, betOTWController, loggedController
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -26,6 +26,7 @@ app.include_router(betOTWController.router)
 app.include_router(reviewController.router)
 app.include_router(yfinanceController.router)
 app.include_router(authController.router)
+app.include_router(loggedController.router)
 
 @app.get("/")
 def root():

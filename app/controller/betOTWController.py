@@ -1,7 +1,7 @@
 from turtle import title
 from fastapi import  Response, status, HTTPException, Depends, APIRouter
 from sqlalchemy.orm import Session
-from datetime import date,timedelta, datetime
+from datetime import date
 
 from sqlalchemy import func
 # from sqlalchemy.sql.functions import func
